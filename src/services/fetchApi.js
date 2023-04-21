@@ -1,5 +1,6 @@
 export const getAllMovies = async () => {
     let response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}`);
+
     return response.json();
 }
 
