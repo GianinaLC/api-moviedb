@@ -1,24 +1,23 @@
-import { useState, useEffect } from 'react';
-import { getAllMovies } from '../../services/fetchApi';
 import MovieList from './MovieList';
+import { getAllMovies } from '../../services/fetchApi';
+import { useState } from 'react';
+import { useAsync } from '../../hooks/useAsync';
 
 const MovieListContainer = () => {
-    const [movies, setMovies] = useState([]) 
-    const [productsPerPage, setProductsPerPage] = useState(6)
-    const [currentPage, setCurrentPage] = useState(1)
+    const [ movies, setMovies ] = useState([]) 
+    const [ loading, setLoading ] = useState(true)
 
-    
-    useEffect(() => {
-        obtainMovies(),
-            setProductsPerPage
-    }, [])
 
-    const obtainMovies = () => {
-        getAllMovies()
-            .then((res) => {
+    useAsync (
+        setLoading,
+        () => getAllMovies()
+            .then(res =>
                 setMovies(res.results)
-                }
-            )
+            ),[]
+    )
+
+    if (loading) {
+        return <h1>CARGANDO</h1>
     }
 
     return (

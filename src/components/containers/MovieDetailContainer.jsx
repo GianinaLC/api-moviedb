@@ -1,28 +1,27 @@
 import MovieDetail from "./MovieDetail"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { getDetailMovie } from "../../services/fetchApi"
-
+import { useAsync } from "../../hooks/useAsync"
 
 const MovieDetailContainer = () => {
 
     const { id } = useParams()
     const [detailMovie, setDetailMovie] = useState()
-
-    useEffect(() => {
-        setLoading(false),
-        obtainDetailMovies(id)
-        },[id]
+    const [loading, setLoading] = useState(true)
+    
+    useAsync (
+        setLoading,
+        () => getDetailMovie(id)
+            .then(res =>
+                setDetailMovie(res)
+            ),[id]
     )
 
-    const obtainDetailMovies = (id) => {
-        getDetailMovie(id)
-            .then((res) => {
-                setDetailMovie(res)
-                }
-            )
-    }
 
+    if (loading) {
+        return <h1>CARGANDO</h1>
+    }
 
     return (
         <div>
